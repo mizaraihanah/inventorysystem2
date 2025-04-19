@@ -71,7 +71,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("ss", $hashedPassword, $userID);
         
         if (!$stmt->execute()) {
-            throw new Exception("Failed to update password");
+            throw new Exception("Failed to update password: " . $stmt->error);
+        }
+        
+        // Check how many rows were affected
+        if ($stmt->affected_rows == 0) {
+            throw new Exception("Password update had no effect. Check if the user exists.");
         }
         
         // Log the password change action
@@ -86,9 +91,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         // Send email notification if requested
+        $emailSent = false;
         if ($notifyUser && !empty($email)) {
-            if (!sendPasswordChangeNotification($email, $userID, $newPassword)) {
-                // Don't fail the entire operation if email fails, just log it
+            $emailSent = sendPasswordChangeNotification($email, $userID, $newPassword);
+            
+            if (!$emailSent) {
+                // Log email failure
                 $logEmailFailSQL = "INSERT INTO admin_logs (admin_id, action, affected_user, action_details, ip_address) 
                                    VALUES (?, 'email_fail', ?, 'Failed to send password change notification', ?)";
                 $stmt = $conn->prepare($logEmailFailSQL);
@@ -100,7 +108,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Commit transaction
         $conn->commit();
         
-        echo json_encode(['success' => true, 'message' => 'Password has been changed successfully']);
+        $message = 'Password has been changed successfully';
+        if ($notifyUser && !$emailSent) {
+            $message .= ' but notification email could not be sent';
+        }
+        
+        echo json_encode(['success' => true, 'message' => $message]);
     } catch (Exception $e) {
         // Rollback transaction on error
         $conn->rollback();
@@ -121,27 +134,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  * @return bool True if email sent successfully, false otherwise
  */
 function sendPasswordChangeNotification($email, $userID, $password) {
-    require 'vendor/autoload.php';
-    
     try {
-        // Create log file for debugging
-        $logFile = 'email_change_debug.log';
+        // Create a new PHPMailer instance
+        $mail = new PHPMailer(true);
         
-        $mail = new PHPMailer\PHPMailer\PHPMailer(true);
-        
-        // Enable verbose debug output
-        $mail->SMTPDebug = 2; // Detailed debugging
-        $mail->Debugoutput = function($str, $level) use ($logFile) {
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ": $str\n", FILE_APPEND);
-        };
-
-        // Server settings
+        // Server settings - reduced debug level
+        $mail->SMTPDebug = 0; // Set to 2 for detailed debugging
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
         $mail->Username   = 'rotiseribakeryemail@gmail.com';
         $mail->Password   = 'jlxf jvxl ezhn txum'; // Your App Password
-        $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->SMTPSecure = 'tls'; // Use string instead of PHPMailer constant
         $mail->Port       = 587;
 
         // Recipients
@@ -160,41 +164,23 @@ function sendPasswordChangeNotification($email, $userID, $password) {
             <p>Dear User,</p>
             <p>Your password for the RotiSeri Bakery system has been reset by an administrator.</p>
             <p><strong>User ID:</strong> {$userID}</p>
+            <p><strong>New Password:</strong> {$password}</p>
             <p>Please change your password upon first login.</p>
             <p>If you did not request this change, contact the administrator immediately.</p>
         </body>
         </html>";
         
-        $textMessage = "Your password for User ID {$userID} has been changed by an administrator. Please log in and change your password.";
+        $textMessage = "Your password for User ID {$userID} has been changed by an administrator. Your new password is: {$password}. Please log in and change your password.";
         
         $mail->Body = $htmlMessage;
         $mail->AltBody = $textMessage;
 
-        // Send email
-        if(!$mail->send()) {
-            // Log the specific error
-            error_log("PHPMailer Error in Password Change: " . $mail->ErrorInfo);
-            
-            // Append to debug log
-            file_put_contents($logFile, "Send Failed: " . $mail->ErrorInfo . "\n", FILE_APPEND);
-            
-            // Fallback to PHP mail
-            $fallbackResult = mail($email, 'Password Changed', $textMessage);
-            
-            if ($fallbackResult) {
-                error_log("Fallback mail() succeeded for password change notification");
-                return true;
-            }
-            
-            return false;
-        }
+        // Send email and return result directly
+        return $mail->send();
         
-        return true;
     } catch (Exception $e) {
         // Log any exceptions
         error_log("Email Exception in Password Change: " . $e->getMessage());
-        file_put_contents('email_change_debug.log', "Exception: " . $e->getMessage() . "\n", FILE_APPEND);
-        
         return false;
     }
 }
