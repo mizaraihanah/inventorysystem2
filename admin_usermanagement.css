@@ -1,0 +1,57 @@
+.user-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+}
+
+.user-card {
+    background: #fff;
+    padding: 20px;
+    width: 250px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.user-info h3 {
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.user-info p {
+    color: #666;
+    font-size: 14px;
+    margin: 2px 0;
+}
+
+.user-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.user-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 5px;
+    transition: 0.3s ease;
+}
+
+.user-actions .update-btn i {
+    color: #4CAF50;
+}
+
+.user-actions .delete-btn i {
+    color: #F44336;
+}
+
+.user-actions button:hover {
+    transform: scale(1.1);
+}

@@ -1,0 +1,167 @@
+/* Sidebar Styles */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 230px;
+    height: 100%;
+    background-color: #2C3E50;
+    color: #fff;
+    padding-top: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 24px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 15px;
+    text-align: left;
+}
+
+.sidebar ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar ul li a:hover {
+    background-color: #0561FC;
+    border-radius: 4px;
+}
+
+/* Sidebar Icons */
+.sidebar ul li a i {
+    font-size: 20px;
+}
+
+/* Main Content Styles */
+.main-content {
+    margin-left: 230px; /* Adjusted for the sidebar */
+    padding: 20px;
+    z-index: 1;
+}
+
+.dashboard-header {
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.dashboard-header p {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Dashboard Cards Layout */
+.dashboard-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+}
+
+.dashboard-card {
+    background: #fff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    width: 250px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+}
+
+.dashboard-card i {
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+.dashboard-card h3 {
+    font-size: 1.2em;
+    color: #333;
+}
+
+.dashboard-card p {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #555;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .dashboard-card {
+        width: 90%;
+    }
+}
+
+/* Chart Styles */
+canvas {
+    max-width: 100%;
+    margin: 20px 0;
+}
+
+/* Modal Styles (if needed) */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    max-width: 600px;
+    width: 90%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* User Greeting and Dashboard Styling */
+.dashboard-header h1 {
+    font-size: 32px;
+    color: #333;
+}
+
+.dashboard-header p {
+    font-size: 16px;
+    color: #777;
+}
+
+/* Adjust Sidebar for smaller screens */
+@media (max-width: 991px) {
+    .sidebar {
+        width: 200px;
+    }
+}

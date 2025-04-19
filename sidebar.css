@@ -1,0 +1,127 @@
+/* Sidebar menu design */
+.sidebar-container {
+    justify-content: space-between;
+    background: var(--Main-White, #fff);
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    width: 160px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    border-right: 1px solid #ddd;
+    padding: 28px 32px;
+    flex-shrink: 0;
+    z-index: 0;
+}
+
+/* Header Section */
+.header-section {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: start;
+}
+
+.company-logo {
+    display: flex;
+    width: 180px;
+    max-width: 100%;
+    align-items: center;
+    gap: 5px;
+    justify-content: start;
+    padding-top: 10px;
+}
+
+.logo-icon {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+}
+
+.company-text {
+    display: flex;
+    flex-direction: row;
+}
+
+.company-name {
+    font: 500 15px 'Inter', sans-serif;
+    font-size: medium;
+    padding-top: 3px;
+}
+
+.company-name2 {
+    font: 600 15px 'Inter', sans-serif;
+    font-size: medium;
+    color: rgba(5, 97, 252, 1);
+    padding-top: 3px;
+}
+
+/* Navigation */
+.nav-container {
+    display: flex;
+    margin-top: 35px;
+    flex-direction: column;
+    color: rgba(147, 163, 171, 1);
+    font: 500 15px 'Inter', sans-serif;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 32px;
+    cursor: pointer;
+    color: #93A3AB;
+    text-decoration: none;
+}
+
+.nav-item:hover {
+    color: #000000;
+}
+
+.nav-item:first-child {
+    margin-top: 0;
+}
+
+.nav-icon {
+    width: 24px;
+    aspect-ratio: 1;
+    object-fit: contain;
+    fill: #93A3AB;
+}
+
+/* Footer Section */
+.footer-section {
+    display: flex;
+    min-height: 80px;
+    align-items: center;
+    justify-content: center;
+    margin-top: auto;
+}
+
+/* Responsive Design */
+@media (max-width: 991px) {
+    .sidebar-container {
+        position: absolute;
+        width: 100%;
+        height: auto;
+        padding: 10px;
+        top: 0;
+        z-index: 1;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    .nav-container {
+        margin-top: 40px;
+    }
+
+    .footer-section {
+        margin-top: 20px;
+    }
+}
